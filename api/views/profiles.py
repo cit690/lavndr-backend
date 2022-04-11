@@ -1,3 +1,4 @@
+from email import message
 from flask import Blueprint, jsonify, request
 from api.middleware import login_required, read_token
 
@@ -22,6 +23,18 @@ profiles = Blueprint('profiles', 'profiles')
 #   db.session.commit()
 #   return jsonify(profile.serialize()), 201
 
+@profiles.route('/', methods=["GET"])
+def index():
+  profiles = Profile.query.all()
+  return jsonify([profile.serialize() for profile in profiles]), 200
+
+@profiles.route('/<id>', methods=["GET"])
+def show(id):
+  profile = Profile.query.filter_by(id=id).first()
+  profile_data = profile.serialize()
+  return jsonify(profile=profile_data), 200
+
+
 @profiles.route('/<id>', methods=["PUT"]) 
 @login_required
 def update(id):
@@ -37,3 +50,17 @@ def update(id):
 
   db.session.commit()
   return jsonify(profile.serialize()), 200
+
+
+@profiles.route('/<id>', methods=["DELETE"])
+@login_required
+def delete(id):
+  user = read_token(request)
+  profile = Profile.query.filter_by(id=id).first()
+
+  if profile.user_id != user["id"]:
+    return 'Forbidden', 403
+  
+  db.session.delete(profile)
+  db.session.commit()
+  return jsonify(message="Success"), 200
