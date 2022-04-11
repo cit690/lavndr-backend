@@ -4,7 +4,6 @@ from api.models.user import User
 from api.models.profile import Profile
 
 from api.middleware import gen_password, compare_password, create_token
-
 auth = Blueprint('auth', 'auth')
 
 # http://127.0.0.1:5000/api/auth/
@@ -59,3 +58,4 @@ def login():
 @auth.errorhandler(Exception)          
 def basic_error(err):
   return jsonify(err=str(err)), 500
+
