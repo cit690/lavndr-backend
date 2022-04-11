@@ -10,6 +10,8 @@ from api.models.profile import Profile
 
 # ============ Import Views ============
 from api.views.auth import auth
+from api.views.profiles import profiles
+
 
 cors = CORS()
 migrate = Migrate() 
@@ -25,6 +27,7 @@ def create_app(config):
 
   # ============ Register Blueprints ============
   app.register_blueprint(auth, url_prefix='/api/auth') 
+  app.register_blueprint(profiles, url_prefix='/api/profiles') 
 
   return app
 
