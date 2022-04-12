@@ -4,9 +4,11 @@ from api.models.db import db
 class Message(db.Model):
   __tablename__ = 'messages'
   id = db.Column(db.Integer, primary_key=True)
-  content = db.Column(db.String(500))
   sent_at = db.Column(db.DateTime, default=datetime.utcnow)
-  profile_id = db.Column(db.Integer, db.ForeignKey('profiles.id'))
+  recipient_id = db.Column(db.Integer, db.ForeignKey('user.id'))
+  sender_id = db.Column(db.Integer, db.ForeignKey('user.id'))
+  content = db.Column(db.String(500))
+  # profile_id = db.Column(db.Integer, db.ForeignKey('profiles.id'))
 
   def __repr__(self):
     return f"Message('{self.id}', '{self.message}'"
