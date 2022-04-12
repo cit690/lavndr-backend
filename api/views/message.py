@@ -25,4 +25,3 @@ def create():
 def index():
   messages = Message.query.all()
   return jsonify([message.serialize() for message in messages]), 200
-
