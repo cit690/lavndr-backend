@@ -28,9 +28,13 @@ class Profile(db.Model):
     four_twenty = db.Column(db.Boolean())
     is_sober = db.Column(db.Boolean())
 
+    messages = db.relationship("Message", cascade='all')
+
     def __repr__(self):
       return f"Profile('{self.id}', '{self.name}'"
 
     def serialize(self):
       profile = {c.name: getattr(self, c.name) for c in self.__table__.columns}
+      messages = [message.serialize() for message in self.messages]
+      profile['messages'] = messages
       return profile
