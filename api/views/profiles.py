@@ -48,3 +48,5 @@ def delete(id):
   db.session.delete(profile)
   db.session.commit()
   return jsonify(message="Success"), 200
+
+profiles.route('<id>/messages')
