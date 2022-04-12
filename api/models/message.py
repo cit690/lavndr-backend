@@ -16,7 +16,9 @@ class Message(db.Model):
   def serialize(self):
     return{
         "id": self.id,
+        "sent_at": self.sent_at.strftime('%Y-%m-%d'),
+        "recipient_id": self.recipient_id,
+        "sender_id": self.sender_id,
         "content": self.content,
-        "profile_id": self.profile_id,
-        "sent_at": self.sent_at.strftime('%Y-%m-%d')
+        # "profile_id": self.profile_id,
     }
