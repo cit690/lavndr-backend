@@ -4,6 +4,7 @@ from api.middleware import login_required, read_token
 
 from api.models.db import db
 from api.models.message import Message
+from api.models.profile import Profile
 
 messages = Blueprint('messages', 'message')
 

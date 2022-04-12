@@ -4,6 +4,7 @@ from api.middleware import login_required, read_token
 
 from api.models.db import db
 from api.models.profile import Profile
+from api.models.message import Message
 
 profiles = Blueprint('profiles', 'profile')
 
@@ -49,4 +50,21 @@ def delete(id):
   db.session.commit()
   return jsonify(message="Success"), 200
 
-profiles.route('<id>/messages')
+
+# profiles.route('<id>/messages', methods=["POST"])
+# @login_required
+# def create_message(id):
+#   data = request.get_json()
+#   data["profile_id"] = id
+
+#   profile = read_token(request)
+#   profile = Profile.query.filter_by(id=id).first()
+
+#   message = Message(**data)
+
+#   db.session.add(message)
+#   db.session.commit()
+
+#   profile_data = profile.serialize()
+#   return jsonify(profile_data), 201
+
