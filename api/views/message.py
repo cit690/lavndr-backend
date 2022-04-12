@@ -1,3 +1,4 @@
+from email import message
 from flask import Blueprint, jsonify, request
 from api.middleware import login_required, read_token
 
@@ -25,3 +26,13 @@ def create():
 def index():
   messages = Message.query.all()
   return jsonify([message.serialize() for message in messages]), 200
+
+
+# show a msg
+@messages.route('/<id>', methods=["GET"])
+def show(id):
+  message = Message.query.filter_by(id=id).first()
+  message_data = message.serialize()
+  return jsonify(message=message_data), 200
+
+# update msg
