@@ -2,12 +2,12 @@ from flask import Blueprint, jsonify, request
 from api.middleware import login_required, read_token
 
 from api.models.db import db
-from api.models.profile import Profile
+from api.models.message import Message
 
-profiles = Blueprint('messages', 'message')
+messages = Blueprint('messages', 'message')
 
 # creating a msg
-@profiles.route('/', methods=["POST"])
+@messages.route('/', methods=["POST"])
 @login_required
 def create():
   data = request.get_json()
@@ -20,3 +20,8 @@ def create():
   db.session.commit()
   return jsonify(message.serialize()), 201
 
+# indexing a msg
+@messages.route('/', methods=["GET"])
+def index():
+  messages = Message.query.all()
+  return jsonify([message.serialize() for message in messages]), 200
