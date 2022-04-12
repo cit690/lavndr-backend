@@ -1,5 +1,7 @@
 from datetime import datetime
 from api.models.db import db
+from api.models.message import Message
+
 
 class Profile(db.Model):
     __tablename__ = 'profiles'
@@ -11,15 +13,9 @@ class Profile(db.Model):
     location = db.Column(db.String)
     vibe_check = db.Column(db.String(200))
     bio = db.Column(db.String(500))
-    # signs will be one profile to many signs 
-    # db.ForeignKey('sign.id')
     sun_sign = db.Column(db.String())
     moon_sign = db.Column(db.String())
     rising_sign = db.Column(db.String())
-    # * replace below code when signs are merged :)
-    # sun_sign = db.Column(db.String(), db.ForeignKey('sign.id'))
-    # moon_sign = db.Column(db.String(), db.ForeignKey('sign.id'))
-    # rising_sign = db.Column(db.String(), db.ForeignKey('sign.id'))q
     profile_picture = db.Column(db.String())
     gender_identity = db.Column(db.String())
     orientation = db.Column(db.String())
@@ -28,7 +24,17 @@ class Profile(db.Model):
     four_twenty = db.Column(db.Boolean())
     is_sober = db.Column(db.Boolean())
 
-    messages = db.relationship("Message", cascade='all')
+    # * commented out code below is claire's
+    # messages = db.relationship("Message", cascade='all')
+    messages_sent = db.relationship('Message',
+                                    foreign_keys='Message.sender_id',
+                                    backref='author', lazy='dynamic')
+
+    messages_received = db.relationship('Message',
+                                    foreign_keys='Message.recipient_id',
+                                    backref='recipient', lazy='dynamic')
+
+    last_message_read_time = db.Column(db.DateTime)
 
     def __repr__(self):
       return f"Profile('{self.id}', '{self.name}'"
@@ -38,3 +44,8 @@ class Profile(db.Model):
       messages = [message.serialize() for message in self.messages]
       profile['messages'] = messages
       return profile
+
+    def new_messages(self):
+      last_read_time = self.last_message_read_time or datetime(1900, 1, 1)
+      return Message.query.filter_by(recipient=self).filter(
+      Message.timestamp > last_read_time).count()
