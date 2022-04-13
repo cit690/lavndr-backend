@@ -5,7 +5,7 @@ from api.models.db import db
 from api.models.profile import Profile
 from api.models.message import Message
 
-from api.models.message import Association
+
 
 
 profiles = Blueprint('profiles', 'profile')
