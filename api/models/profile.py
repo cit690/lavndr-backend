@@ -10,6 +10,8 @@ class Profile(db.Model):
     sender_id = db.Column(db.Integer, db.ForeignKey('recipients.id'))
     recipient_id = db.Column(db.Integer, db.ForeignKey('senders.id'))
 
+    message_id = db.Column(db.Integer, db.ForeignKey('messages.id'))
+
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
     name = db.Column(db.String(100), nullable=False)
     profile_picture = db.Column(db.String())
@@ -41,6 +43,7 @@ class Profile(db.Model):
 
       messages = [message.serialize() for message in self.messages]  # <=== Associate ===
       profile['messages'] = messages  # <=== Associate  ===
+
       return profile
 
 
@@ -58,7 +61,6 @@ class Recipient(db.Model):
     messages = [message.serialize() for message in self.messages]  # <=== Associate ===
     recipient['messages'] = messages  # <=== Associate  ===
     return recipient
-
 
 class Sender(db.Model):
   __tablename__ = 'senders'
