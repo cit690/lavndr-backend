@@ -24,9 +24,12 @@ class Profile(db.Model):
     location = db.Column(db.String)
     vibe_check = db.Column(db.String(200))
     bio = db.Column(db.String(500))
-    sun_sign = db.Column(db.String())
-    moon_sign = db.Column(db.String())
-    rising_sign = db.Column(db.String())
+    sun_sign = db.Column('sun sign', db.Enum('Ari', 'Tau', 'Gem', 'Can', 'Leo', 'Vir', 'Lib', 'Sco', 'Sag', 'Cap', 'Aqu', 'Pis'))
+    moon_sign = db.Column('moon_sign', db.Enum('Ari', 'Tau', 'Gem', 'Can', 'Leo', 'Vir', 'Lib', 'Sco', 'Sag', 'Cap', 'Aqu', 'Pis'))
+    rising_sign = db.Column('rising sign', db.Enum('Ari', 'Tau', 'Gem', 'Can', 'Leo', 'Vir', 'Lib', 'Sco', 'Sag', 'Cap', 'Aqu', 'Pis'))
+    profile_picture = db.Column(db.String())
+    gender_identity = db.Column(db.String())
+    orientation = db.Column(db.String())
     smoke = db.Column(db.Boolean())
     drink = db.Column(db.Boolean())
     four_twenty = db.Column(db.Boolean())
@@ -45,6 +48,7 @@ class Profile(db.Model):
       profile = {c.name: getattr(self, c.name) for c in self.__table__.columns}
       messages = [message.serialize() for message in self.messages]
       profile['messages'] = messages
+
       return profile
 
 # # todo:
@@ -60,3 +64,4 @@ class Profile(db.Model):
 # # toys = [toy.serialize() for toy in self.toys] # <=== Here ===
 #       # cat['feedings'] = feedings
 #       # cat['toys'] = toys
+

@@ -8,10 +8,12 @@ class Message(db.Model):
   sent_at = db.Column(db.DateTime, default=datetime.utcnow)
   profile_id = db.Column(db.Integer, db.ForeignKey('profiles.id'))
 
+
   def __repr__(self):
     return f"Message('{self.id}', '{self.message}'"
 
   def serialize(self):
+    message = {c.name: getattr(self, c.name) for c in self.__table__.columns}
     return{
         "id": self.id,
         "content": self.content,
