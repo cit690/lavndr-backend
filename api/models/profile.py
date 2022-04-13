@@ -3,6 +3,7 @@ from api.models.db import db
 
 class Profile(db.Model):
     __tablename__ = 'profiles'
+    # * Properties: 
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(100), nullable=False)
     user_id = db.Column(db.Integer, db.ForeignKey('users.id'))
@@ -11,15 +12,9 @@ class Profile(db.Model):
     location = db.Column(db.String)
     vibe_check = db.Column(db.String(200))
     bio = db.Column(db.String(500))
-    # signs will be one profile to many signs 
-    # db.ForeignKey('sign.id')
     sun_sign = db.Column(db.String())
     moon_sign = db.Column(db.String())
     rising_sign = db.Column(db.String())
-    # * replace below code when signs are merged :)
-    # sun_sign = db.Column(db.String(), db.ForeignKey('sign.id'))
-    # moon_sign = db.Column(db.String(), db.ForeignKey('sign.id'))
-    # rising_sign = db.Column(db.String(), db.ForeignKey('sign.id'))q
     profile_picture = db.Column(db.String())
     gender_identity = db.Column(db.String())
     orientation = db.Column(db.String())
@@ -28,7 +23,11 @@ class Profile(db.Model):
     four_twenty = db.Column(db.Boolean())
     is_sober = db.Column(db.Boolean())
 
-    messages = db.relationship("Message", cascade='all')
+    # * Relationships:
+    # Add association table relationship - using cat/toy relationship example
+    # below is old code
+    # messages = db.relationship("Message", cascade='all')
+    messages = db.relationship("Message", secondary="associations") 
 
     def __repr__(self):
       return f"Profile('{self.id}', '{self.name}'"
@@ -38,3 +37,17 @@ class Profile(db.Model):
       messages = [message.serialize() for message in self.messages]
       profile['messages'] = messages
       return profile
+
+# # todo:
+# done
+# # add a new relationship 
+# # like the one in the cat model under the 'associate toys' section
+# # example:
+# #  toys = db.relationship("Toy", secondary="associations") # <=== Here ===
+# # todo:
+# done
+# # add to serialize function
+# # example:
+# # toys = [toy.serialize() for toy in self.toys] # <=== Here ===
+#       # cat['feedings'] = feedings
+#       # cat['toys'] = toys
