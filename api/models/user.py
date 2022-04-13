@@ -9,6 +9,7 @@ class User(db.Model):
     profile = db.relationship("Profile", cascade='all', uselist=False)
     created_at = db.Column(db.DateTime, default=datetime.utcnow, nullable=False)
 
+
     def serialize(self):
       user = {c.name: getattr(self, c.name) for c in self.__table__.columns}
       if self.profile:

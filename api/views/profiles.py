@@ -4,7 +4,9 @@ from api.middleware import login_required, read_token
 from api.models.db import db
 from api.models.profile import Profile
 from api.models.message import Message
+
 from api.models.message import Association
+
 
 profiles = Blueprint('profiles', 'profile')
 
@@ -95,3 +97,4 @@ def assoc_msg(sender_id, recipient_id, message_id):
 
 #   cat = Cat.query.filter_by(id=cat_id).first()
 #   return jsonify(cat.serialize()), 201
+
