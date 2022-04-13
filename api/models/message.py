@@ -24,10 +24,9 @@ class Message(db.Model):
 class Association(db.Model):
     __tablename__ = 'associations'
     id = db.Column(db.Integer, primary_key=True)
-    sender_num = db.Column(db.Integer, db.ForeignKey('profiles.sender_num', ondelete='cascade'))
-    recipient_num = db.Column(db.Integer, db.ForeignKey('profiles.recipient_num', ondelete='cascade'))
+    sender_id = db.Column(db.Integer, db.ForeignKey('recipients.id'))
+    recipient_id = db.Column(db.Integer, db.ForeignKey('senders.id'))
     message_id = db.Column(db.Integer, db.ForeignKey('messages.id', ondelete='cascade'))
-
 
 # * "It seems like a message would link 2 users
 # * a sender and a recipient. 

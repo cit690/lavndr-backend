@@ -7,10 +7,6 @@ class Profile(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     user_id = db.Column(db.Integer, db.ForeignKey('users.id'))
 
-    # old code - keeping just in case
-    # sender_num = db.Column(db.Integer, unique=True, nullable=False)
-    # recipient_num = db.Column(db.Integer, unique=True, nullable=False)
-    # * ok now senders and recipients have their own models & tables instead of unique properties so that they can have an id
     sender_id = db.Column(db.Integer, db.ForeignKey('recipients.id'))
     recipient_id = db.Column(db.Integer, db.ForeignKey('senders.id'))
 
@@ -35,7 +31,7 @@ class Profile(db.Model):
     is_sober = db.Column(db.Boolean())
 
     # * Relationships:
-    messages = db.relationship("Message", secondary="associations")  # <=== Associate ===
+    messages = db.relationship("Message", secondary="associations")
 
     def __repr__(self):
       return f"Profile('{self.id}', '{self.name}'"
@@ -52,19 +48,27 @@ class Recipient(db.Model):
   __tablename__ = 'recipients'
   id = db.Column(db.Integer, primary_key=True)
 
+  messages = db.relationship("Message", secondary="associations")
+
   def __repr__(self):
-    return f"Recipients('{self.id}', '{self.message}'"
+    return f"Recipients('{self.id}', '{self.recipient}'"
 
   def serialize(self):
-    return{
-        "id": self.id,
-        "content": self.content,
-        "profile_id": self.profile_id,
-        "sent_at": self.sent_at.strftime('%Y-%m-%d')
+    return {
+        "id": self.id
     }
 
+
 class Sender(db.Model):
-  __tablename__ = 'Senders'
+  __tablename__ = 'senders'
   id = db.Column(db.Integer, primary_key=True)
 
+  messages = db.relationship("Message", secondary="associations")
 
+  def __repr__(self):
+    return f"senders('{self.id}', '{self.sender}'"
+
+  def serialize(self):
+    return {
+        "id": self.id
+    }
