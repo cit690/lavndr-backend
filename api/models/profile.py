@@ -54,9 +54,10 @@ class Recipient(db.Model):
     return f"Recipients('{self.id}', '{self.recipient}'"
 
   def serialize(self):
-    return {
-        "id": self.id
-    }
+    recipient = {c.name: getattr(self, c.name) for c in self.__table__.columns}
+    messages = [message.serialize() for message in self.messages]  # <=== Associate ===
+    recipient['messages'] = messages  # <=== Associate  ===
+    return recipient
 
 
 class Sender(db.Model):
@@ -68,7 +69,8 @@ class Sender(db.Model):
   def __repr__(self):
     return f"senders('{self.id}', '{self.sender}'"
 
-  def serialize(self):
-    return {
-        "id": self.id
-    }
+def serialize(self):
+    sender = {c.name: getattr(self, c.name) for c in self.__table__.columns}
+    messages = [message.serialize() for message in self.messages]  # <=== Associate ===
+    sender['messages'] = messages  # <=== Associate  ===
+    return sender
