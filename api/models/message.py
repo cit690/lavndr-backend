@@ -18,3 +18,13 @@ class Message(db.Model):
         "profile_id": self.profile_id,
         "sent_at": self.sent_at.strftime('%Y-%m-%d')
     }
+
+class Association(db.Model):
+    __tablename__ = 'associations'
+    id = db.Column(db.Integer, primary_key=True)
+    sender_id = db.Column(db.Integer, db.ForeignKey('profile.id', ondelete='cascade'))
+    recipient_id = db.Column(db.Integer, db.ForeignKey('profile.id', ondelete='cascade'))
+
+# * "It seems like a message would link 2 users
+# * a sender and a recipient. 
+# * And both the sender and the recipient would want access to that message"

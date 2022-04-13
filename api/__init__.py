@@ -31,7 +31,6 @@ def create_app(config):
   app.register_blueprint(profiles, url_prefix='/api/profiles')
   app.register_blueprint(messages, url_prefix='/api/messages')
 
-
   return app
 
 app = create_app(Config)
