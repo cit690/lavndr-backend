@@ -8,6 +8,7 @@ from config import Config
 from api.models.user import User
 from api.models.profile import Profile
 from api.models.message import Message
+from api.models.message import Association
 
 # ============ Import Views ============
 from api.views.auth import auth
@@ -31,7 +32,6 @@ def create_app(config):
   app.register_blueprint(auth, url_prefix='/api/auth') 
   app.register_blueprint(profiles, url_prefix='/api/profiles')
   app.register_blueprint(messages, url_prefix='/api/messages')
-
 
   return app
 

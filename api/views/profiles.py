@@ -1,42 +1,46 @@
-from email import message
-from flask import Blueprint, jsonify, request
+from flask import Blueprint, jsonify, request, session
 from api.middleware import login_required, read_token
 
 from api.models.db import db
 from api.models.profile import Profile
 from api.models.message import Message
 
+from api.models.message import Association
+
+
 profiles = Blueprint('profiles', 'profile')
 
+# * show all profs
 @profiles.route('/', methods=["GET"])
 def index():
   profiles = Profile.query.all()
   return jsonify([profile.serialize() for profile in profiles]), 200
 
+# * show one prof
 @profiles.route('/<id>', methods=["GET"])
 def show(id):
   profile = Profile.query.filter_by(id=id).first()
   profile_data = profile.serialize()
   return jsonify(profile=profile_data), 200
 
-
+# * update the prof
 @profiles.route('/<id>', methods=["PUT"]) 
 @login_required
 def update(id):
   data = request.get_json()
   user = read_token(request)
   profile = Profile.query.filter_by(id=id).first()
+  print("hello!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!")
 
   if profile.user_id != user["id"]:
     return 'Forbidden', 403
 
   for key in data:
     setattr(profile, key, data[key])
-
   db.session.commit()
   return jsonify(profile.serialize()), 200
 
-
+# * delete the prof
 @profiles.route('/<id>', methods=["DELETE"])
 @login_required
 def delete(id):
@@ -50,21 +54,47 @@ def delete(id):
   db.session.commit()
   return jsonify(message="Success"), 200
 
+profiles.route('<id>/messages')
 
-# profiles.route('<id>/messages', methods=["POST"])
+# * associate msg
+
+
+@profiles.route('/<profile_id>/messages/<message_id>', methods=["LINK"]) 
+@login_required
+def assoc_msg(sender_id, recipient_id, message_id):
+  data = { "message_id": message_id, "sender_id": sender_id, "recipient_id": recipient_id }
+  
+  profile = read_token(request)
+  sender = Profile.query.filter_by(id=sender_id).first()
+  recipient = Profile.query.filter_by(id=recipient_id).first()
+
+  if profile.profile_id != profile["id"]:
+    return 'Forbidden', 403
+
+  assoc = Association(**data)
+  db.session.add(assoc)
+  db.session.commit()
+
+  profile = Profile.query.filter_by(id=profile_id).first()
+  return jsonify(profile.serialize()), 201
+
+
+# * association route reference
+# @cats.route('/<cat_id>/toys/<toy_id>', methods=["LINK"]) 
 # @login_required
-# def create_message(id):
-#   data = request.get_json()
-#   data["profile_id"] = id
+# def assoc_toy(cat_id, toy_id):
+#   data = { "cat_id": cat_id, "toy_id": toy_id }
 
 #   profile = read_token(request)
-#   profile = Profile.query.filter_by(id=id).first()
+#   cat = Cat.query.filter_by(id=cat_id).first()
+  
+#   if cat.profile_id != profile["id"]:
+#     return 'Forbidden', 403
 
-#   message = Message(**data)
-
-#   db.session.add(message)
+#   assoc = Association(**data)
+#   db.session.add(assoc)
 #   db.session.commit()
 
-#   profile_data = profile.serialize()
-#   return jsonify(profile_data), 201
+#   cat = Cat.query.filter_by(id=cat_id).first()
+#   return jsonify(cat.serialize()), 201
 
