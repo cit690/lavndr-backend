@@ -1,8 +1,5 @@
-from cmath import log
-from email import message
 from flask import Blueprint, jsonify, request
 from api.middleware import login_required, read_token
-
 
 from api.models.db import db
 from api.models.message import Message
@@ -11,28 +8,22 @@ from api.models.user import User
 
 messages = Blueprint('messages', 'message')
 
-# creating a msg
-@messages.route('/<profile_id>', methods=["POST"])
+# * creating a msg
+@messages.route('/', methods=["POST"])
 @login_required
-def create_message(profile_id):
+def create():
   data = request.get_json()
+  profile = read_token(request)
+  data["sender_id"] = profile["id"]
 
-  data = {"profile_id": profile_id}
-  # below, we retrieve a user's user data with the read_token middleware function, and assign that to a variable called user
-
-  user = read_token(request)
-  data["profile_id"] = user["id"]
+  print("hello!!!!!!!!!!!!!!!!!!!2222")
+  print("data is", data)
   message = Message(**data)
   db.session.add(message)
   db.session.commit()
-
-  print("hello")
   return jsonify(message.serialize()), 201
 
-  print("hello")
-
 # indexing a msg - @login_required
-
 @messages.route('/', methods=["GET"])
 @login_required
 def index():

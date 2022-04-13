@@ -5,9 +5,6 @@ from api.models.db import db
 from api.models.profile import Profile
 from api.models.message import Message
 
-from api.models.message import Association
-
-
 profiles = Blueprint('profiles', 'profile')
 
 # * show all profs
@@ -56,45 +53,23 @@ def delete(id):
 
 profiles.route('<id>/messages')
 
+
 # * associate msg
-
-
 @profiles.route('/<profile_id>/messages/<message_id>', methods=["LINK"]) 
 @login_required
-def assoc_msg(sender_id, recipient_id, message_id):
-  data = { "message_id": message_id, "sender_id": sender_id, "recipient_id": recipient_id }
+def assoc_msg(message_id, profile_id):
+  print("association route firing!")
+  data = { "message_id": message_id, "profile_id": profile_id }
   
   profile = read_token(request)
-  sender = Profile.query.filter_by(id=sender_id).first()
-  recipient = Profile.query.filter_by(id=recipient_id).first()
+  profile = Profile.query.filter_by(id=profile_id).first()
 
   if profile.profile_id != profile["id"]:
     return 'Forbidden', 403
 
-  assoc = Association(**data)
-  db.session.add(assoc)
+  assocMsg = Message(**data)
+  db.session.add(assocMsg)
   db.session.commit()
 
   profile = Profile.query.filter_by(id=profile_id).first()
   return jsonify(profile.serialize()), 201
-
-
-# * association route reference
-# @cats.route('/<cat_id>/toys/<toy_id>', methods=["LINK"]) 
-# @login_required
-# def assoc_toy(cat_id, toy_id):
-#   data = { "cat_id": cat_id, "toy_id": toy_id }
-
-#   profile = read_token(request)
-#   cat = Cat.query.filter_by(id=cat_id).first()
-  
-#   if cat.profile_id != profile["id"]:
-#     return 'Forbidden', 403
-
-#   assoc = Association(**data)
-#   db.session.add(assoc)
-#   db.session.commit()
-
-#   cat = Cat.query.filter_by(id=cat_id).first()
-#   return jsonify(cat.serialize()), 201
-
