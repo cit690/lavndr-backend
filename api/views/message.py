@@ -47,7 +47,7 @@ def update(id):
   profile = read_token(request)
   message = Message.query.filter_by(id=id).first()
 
-  if message.profile_id != profile["id"]:
+  if message.sender_id != profile["id"]:
     return 'Forbidden', 403
 
   for key in data:
@@ -63,7 +63,7 @@ def delete(id):
   profile = read_token(request)
   message = Message.query.filter_by(id=id).first()
 
-  if message.profile_id != profile["id"]:
+  if message.sender_id != profile["id"]:
     return 'Forbidden', 403
 
   db.session.delete(message)
