@@ -59,23 +59,25 @@ profiles.route('<id>/messages')
 
 @profiles.route('/<profile_id>/messages/<message_id>', methods=["LINK"]) 
 @login_required
-def assoc_toy(cat_id, toy_id):
-  data = { "cat_id": cat_id, "toy_id": toy_id }
-
-  profile = read_token(request)
-  cat = Cat.query.filter_by(id=cat_id).first()
+def assoc_msg(sender_id, recipient_id, message_id):
+  data = { "message_id": message_id, "sender_id": sender_id, "recipient_id": recipient_id }
   
-  if cat.profile_id != profile["id"]:
+  profile = read_token(request)
+  sender = Profile.query.filter_by(id=sender_id).first()
+  recipient = Profile.query.filter_by(id=recipient_id).first()
+
+  if profile.profile_id != profile["id"]:
     return 'Forbidden', 403
 
   assoc = Association(**data)
   db.session.add(assoc)
   db.session.commit()
 
-  cat = Cat.query.filter_by(id=cat_id).first()
-  return jsonify(cat.serialize()), 201
+  profile = Profile.query.filter_by(id=profile_id).first()
+  return jsonify(profile.serialize()), 201
 
-# * association route referencegi
+
+# * association route reference
 # @cats.route('/<cat_id>/toys/<toy_id>', methods=["LINK"]) 
 # @login_required
 # def assoc_toy(cat_id, toy_id):
