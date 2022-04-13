@@ -1,4 +1,4 @@
-from flask import Blueprint, jsonify, request, session
+from flask import Blueprint, jsonify, request
 from api.middleware import login_required, read_token
 
 from api.models.db import db
@@ -27,7 +27,6 @@ def update(id):
   data = request.get_json()
   user = read_token(request)
   profile = Profile.query.filter_by(id=id).first()
-  print("hello!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!")
 
   if profile.user_id != user["id"]:
     return 'Forbidden', 403
@@ -51,9 +50,7 @@ def delete(id):
   db.session.commit()
   return jsonify(message="Success"), 200
 
-profiles.route('<id>/messages')
-
-
+# profiles.route('<id>/messages')
 # * associate msg
 @profiles.route('/<profile_id>/messages/<message_id>', methods=["LINK"]) 
 @login_required

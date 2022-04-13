@@ -3,8 +3,8 @@ from api.middleware import login_required, read_token
 
 from api.models.db import db
 from api.models.message import Message
-from api.models.profile import Profile
-from api.models.user import User
+# from api.models.profile import Profile
+# from api.models.user import User
 
 messages = Blueprint('messages', 'message')
 
