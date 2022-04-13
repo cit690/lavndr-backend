@@ -7,18 +7,16 @@ class Message(db.Model):
   content = db.Column(db.String(500))
   sent_at = db.Column(db.DateTime, default=datetime.utcnow)
   profile_id = db.Column(db.Integer, db.ForeignKey('profiles.id'))
-  author_id = db.Column(db.Integer, db.ForeignKey('users.id'))
 
-  # message_author = db.relationship("User", cascade="all")
 
   def __repr__(self):
     return f"Message('{self.id}', '{self.message}'"
 
   def serialize(self):
+    message = {c.name: getattr(self, c.name) for c in self.__table__.columns}
     return{
         "id": self.id,
         "content": self.content,
         "profile_id": self.profile_id,
-        "author_id": self.author_id,
         "sent_at": self.sent_at.strftime('%Y-%m-%d')
     }

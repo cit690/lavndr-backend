@@ -11,15 +11,9 @@ class Profile(db.Model):
     location = db.Column(db.String)
     vibe_check = db.Column(db.String(200))
     bio = db.Column(db.String(500))
-    # signs will be one profile to many signs 
-    # db.ForeignKey('sign.id')
-    sun_sign = db.Column(db.String())
-    moon_sign = db.Column(db.String())
-    rising_sign = db.Column(db.String())
-    # * replace below code when signs are merged :)
-    # sun_sign = db.Column(db.String(), db.ForeignKey('sign.id'))
-    # moon_sign = db.Column(db.String(), db.ForeignKey('sign.id'))
-    # rising_sign = db.Column(db.String(), db.ForeignKey('sign.id'))q
+    sun_sign = db.Column('sun sign', db.Enum('Ari', 'Tau', 'Gem', 'Can', 'Leo', 'Vir', 'Lib', 'Sco', 'Sag', 'Cap', 'Aqu', 'Pis'))
+    moon_sign = db.Column('moon_sign', db.Enum('Ari', 'Tau', 'Gem', 'Can', 'Leo', 'Vir', 'Lib', 'Sco', 'Sag', 'Cap', 'Aqu', 'Pis'))
+    rising_sign = db.Column('rising sign', db.Enum('Ari', 'Tau', 'Gem', 'Can', 'Leo', 'Vir', 'Lib', 'Sco', 'Sag', 'Cap', 'Aqu', 'Pis'))
     profile_picture = db.Column(db.String())
     gender_identity = db.Column(db.String())
     orientation = db.Column(db.String())

@@ -9,12 +9,9 @@ class User(db.Model):
     profile = db.relationship("Profile", cascade='all', uselist=False)
     created_at = db.Column(db.DateTime, default=datetime.utcnow, nullable=False)
 
-    messages = db.relationship("Message", cascade='all')
 
     def serialize(self):
       user = {c.name: getattr(self, c.name) for c in self.__table__.columns}
-      messages = [message.serialize() for message in self.messages]
-      user['messages']=messages
       if self.profile:
         user['profile'] = self.profile.serialize()
       return user
