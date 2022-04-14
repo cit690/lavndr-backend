@@ -1,4 +1,4 @@
-from flask import Flask
+from flask import Flask 
 from flask_cors import CORS
 from flask_migrate import Migrate
 from api.models.db import db
@@ -13,6 +13,7 @@ from api.models.message import Message
 from api.views.auth import auth
 from api.views.profiles import profiles
 from api.views.message import messages
+
 
 cors = CORS()
 migrate = Migrate() 
