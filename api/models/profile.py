@@ -30,6 +30,8 @@ class Profile(db.Model):
     # * Relationships:
     messages = db.relationship("Message", secondary="messages", primaryjoin="Message.recipient_id==Profile.id", secondaryjoin="Message.sender_id==Profile.id")
 
+    sent = db.relationship("Message", secondary="messages", primaryjoin="Message.sender_id==Profile.id", secondaryjoin="Message.recipient_id==Profile.id")
+
     def __repr__(self):
       return f"Profile('{self.id}', '{self.name}'"
 
@@ -37,6 +39,9 @@ class Profile(db.Model):
       profile = {c.name: getattr(self, c.name) for c in self.__table__.columns}
 
       messages = [message.serialize() for message in self.messages]
+      sent = [message.serialize() for message in self.sent]
+
       profile['messages'] = messages 
+      profile['sent'] = sent 
 
       return profile

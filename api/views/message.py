@@ -8,13 +8,14 @@ from api.models.message import Message
 
 messages = Blueprint('messages', 'message')
 
-# * creating a msg
-@messages.route('/', methods=["POST"])
+# * create a msg
+@messages.route('/<recipient_id>', methods=["POST"])
 @login_required
-def create():
+def create(recipient_id):
   data = request.get_json()
   profile = read_token(request)
   data["sender_id"] = profile["id"]
+  data["recipient_id"] = recipient_id
 
   print("hello!!!!!!!!!!!!!!!!!!!2222")
   print("data is", data)
@@ -23,13 +24,12 @@ def create():
   db.session.commit()
   return jsonify(message.serialize()), 201
 
-# indexing a msg - @login_required
+# * index all msgs
 @messages.route('/', methods=["GET"])
 @login_required
 def index():
   messages = Message.query.all()
   return jsonify([message.serialize() for message in messages]), 200 
-
 
 # show a msg - @login_required
 @messages.route('/<id>', methods=["GET"])

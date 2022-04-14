@@ -7,7 +7,7 @@ from api.models.message import Message
 
 profiles = Blueprint('profiles', 'profile')
 
-# * show all profs
+# * index all profs
 @profiles.route('/', methods=["GET"])
 def index():
   profiles = Profile.query.all()
@@ -51,22 +51,22 @@ def delete(id):
   return jsonify(message="Success"), 200
 
 # profiles.route('<id>/messages')
-# * associate msg
-@profiles.route('/<profile_id>/messages/<message_id>', methods=["LINK"]) 
-@login_required
-def assoc_msg(message_id, profile_id):
-  print("association route firing!")
-  data = { "message_id": message_id, "profile_id": profile_id }
+# # * associate msg
+# @profiles.route('/<profile_id>/messages/<message_id>', methods=["LINK"]) 
+# @login_required
+# def assoc_msg(message_id, profile_id):
+#   print("association route firing!")
+#   data = { "message_id": message_id, "profile_id": profile_id }
   
-  profile = read_token(request)
-  profile = Profile.query.filter_by(id=profile_id).first()
+#   profile = read_token(request)
+#   profile = Profile.query.filter_by(id=profile_id).first()
 
-  if profile.profile_id != profile["id"]:
-    return 'Forbidden', 403
+#   if profile.profile_id != profile["id"]:
+#     return 'Forbidden', 403
 
-  assocMsg = Message(**data)
-  db.session.add(assocMsg)
-  db.session.commit()
+#   assocMsg = Message(**data)
+#   db.session.add(assocMsg)
+#   db.session.commit()
 
-  profile = Profile.query.filter_by(id=profile_id).first()
-  return jsonify(profile.serialize()), 201
+#   profile = Profile.query.filter_by(id=profile_id).first()
+#   return jsonify(profile.serialize()), 201
