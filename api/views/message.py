@@ -3,31 +3,29 @@ from api.middleware import login_required, read_token
 
 from api.models.db import db
 from api.models.message import Message
-from api.models.profile import Profile
-from api.models.user import User
 
 messages = Blueprint('messages', 'message')
 
-# * creating a msg
-@messages.route('/', methods=["POST"])
+# * create a msg
+@messages.route('/<recipient_id>', methods=["POST"])
 @login_required
-def create():
+def create(recipient_id):
   data = request.get_json()
   profile = read_token(request)
   data["sender_id"] = profile["id"]
+  data["recipient_id"] = recipient_id
 
   message = Message(**data)
   db.session.add(message)
   db.session.commit()
   return jsonify(message.serialize()), 201
 
-# indexing a msg - @login_required
+# * index all msgs
 @messages.route('/', methods=["GET"])
 @login_required
 def index():
   messages = Message.query.all()
   return jsonify([message.serialize() for message in messages]), 200 
-
 
 # show a msg - @login_required
 @messages.route('/<id>', methods=["GET"])
@@ -45,7 +43,7 @@ def update(id):
   profile = read_token(request)
   message = Message.query.filter_by(id=id).first()
 
-  if message.profile_id != profile["id"]:
+  if message.sender_id != profile["id"]:
     return 'Forbidden', 403
 
   for key in data:
@@ -61,7 +59,7 @@ def delete(id):
   profile = read_token(request)
   message = Message.query.filter_by(id=id).first()
 
-  if message.profile_id != profile["id"]:
+  if message.sender_id != profile["id"]:
     return 'Forbidden', 403
 
   db.session.delete(message)
