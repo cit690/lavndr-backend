@@ -16,8 +16,6 @@ def create():
   profile = read_token(request)
   data["sender_id"] = profile["id"]
 
-  print("hello!!!!!!!!!!!!!!!!!!!2222")
-  print("data is", data)
   message = Message(**data)
   db.session.add(message)
   db.session.commit()

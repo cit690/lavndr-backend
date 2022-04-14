@@ -27,7 +27,6 @@ def update(id):
   data = request.get_json()
   user = read_token(request)
   profile = Profile.query.filter_by(id=id).first()
-  print("hello!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!")
 
   if profile.user_id != user["id"]:
     return 'Forbidden', 403
